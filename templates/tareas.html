@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>📋 Tareas del usuario</h2>
+
+<a href="{{ url_for('crear_tarea', usuario_id=usuario_id) }}">
+    ➕ Nueva tarea
+</a>
+
+<hr>
+
+<ul>
+    {% for t in tareas %}
+        <li>
+            <strong>{{ t.titulo }}</strong> - {{ t.estado }}
+
+            <p>{{ t.descripcion }}</p>
+
+            <!-- Cambiar estado -->
+            <form method="POST" action="{{ url_for('actualizar_estado', tarea_id=t._id) }}">
+                <select name="estado">
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en_progreso">En progreso</option>
+                    <option value="completada">Completada</option>
+                    <option value="cancelada">Cancelada</option>
+                </select>
+                <button type="submit">Actualizar</button>
+            </form>
+
+            <!-- Eliminar -->
+            <form method="POST" action="{{ url_for('eliminar_tarea', tarea_id=t._id) }}">
+                <button type="submit">Eliminar</button>
+            </form>
+
+            <hr>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url_for('index') }}">⬅ Volver al inicio</a>
+
+{% endblock %}

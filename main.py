@@ -4,9 +4,7 @@ from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict
 import os
-
-def main():
-    print("Hello from practica1!")
+from flask import Flask, render_template, url_for, request, redirect
 class GestorTareas:
     def __init__(self, uri: str = 'mongodb://localhost:27017/'):
         """Inicializar conexión a MongoDB"""
@@ -242,5 +240,61 @@ def ejemplo_uso():
     gestor.cerrar_conexion()
 
 
+app = Flask(__name__)
+gestor = GestorTareas()
+
+@app.route('/')
+def index():
+    usuarios = list(gestor.usuarios.find())
+    for u in usuarios:
+        u['_id'] = str(u['_id'])
+    return render_template('index.html', usuarios=usuarios)
+
+
+
+@app.route('/crear_usuario', methods=['GET', 'POST'])
+def crear_usuario():
+    if request.method == 'POST':
+        gestor.crear_usuario(
+            request.form['nombre'],
+            request.form['email']
+        )
+        return redirect(url_for('index'))
+    
+    return render_template('crear_usuario.html')
+
+
+@app.route('/crear_tarea/<usuario_id>', methods=['GET', 'POST'])
+def crear_tarea(usuario_id):
+    if request.method == 'POST':
+        gestor.crear_tarea(
+            usuario_id,
+            request.form['titulo'],
+            request.form['descripcion']
+        )
+        return redirect(url_for('ver_tareas', usuario_id=usuario_id))
+    
+    return render_template('crear_tarea.html', usuario_id=usuario_id)
+
+
+@app.route('/actualizar_estado/<tarea_id>', methods=['POST'])
+def actualizar_estado(tarea_id):
+    gestor.actualizar_estado_tarea(
+        tarea_id,
+        request.form['estado']
+    )
+    return redirect(request.referrer)
+
+
+@app.route('/eliminar_tarea/<tarea_id>', methods=['POST'])
+def eliminar_tarea(tarea_id):
+    gestor.eliminar_tarea(tarea_id)
+    return redirect(request.referrer)
+
+@app.route('/tareas/<usuario_id>')
+def ver_tareas(usuario_id):
+    tareas = gestor.obtener_tareas_usuario(usuario_id)
+    return render_template('tareas.html', tareas=tareas, usuario_id=usuario_id)
+
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Gestor de Tareas{% endblock %}</title>
+</head>
+<body>
+    <h1>📝 Gestor de Tareas</h1>
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a> |
+        <a href="{{ url_for('crear_usuario') }}">Crear Usuario</a>
+    </nav>
+    <hr>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

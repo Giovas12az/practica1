@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>📝 Nueva Tarea</h2>
+
+<form method="POST">
+    <input type="text" name="titulo" placeholder="Título" required>
+    <br><br>
+    <textarea name="descripcion" placeholder="Descripción"></textarea>
+    <br><br>
+    <button type="submit">Crear tarea</button>
+</form>
+
+<a href="{{ url_for('ver_tareas', usuario_id=usuario_id) }}">⬅ Volver</a>
+
+{% endblock %}
