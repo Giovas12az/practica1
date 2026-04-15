@@ -1,14 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2> Crear Usuario</h2>
 
-<form method="POST">
-    <input type="text" name="nombre" placeholder="Nombre" required>
-    <br><br>
-    <input type="email" name="email" placeholder="Email" required>
-    <br><br>
-    <button type="submit">Crear</button>
-</form>
+<div class="container mt-5 " style="max-width: 400px;">
+    <h2 class="text-center mb-4"> Crear Usuario</h2>
+    {% if error %}
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
+    {% endif %}
+    <div class="card shadow border-secondary">
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label>nombre</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Confirmar Contraseña</label>
+                    <input type="password" name="confirm_password" class="form-control" required>
+                </div>
+                <br><br>
+                <button type="submit" class="btn btn-primary w-100">
+                    Crear cuenta
+                </button>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('index') }}"> Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+</div>
 {% endblock %}

@@ -259,13 +259,22 @@ def index():
 
 @app.route('/crear_usuario', methods=['GET', 'POST'])
 def crear_usuario():
+
     if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            return render_template('crear_usuario.html', error="Las contraseñas no coinciden")
+
         gestor.crear_usuario(
             request.form['nombre'],
-            request.form['email']
+            request.form['email'],
+            password
         )
+
         return redirect(url_for('index'))
-    
+
     return render_template('crear_usuario.html')
 
 
@@ -322,6 +331,8 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

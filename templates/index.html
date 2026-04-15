@@ -3,14 +3,13 @@
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
-<div class="container mt-5" style="max-width: 400px;">
+<div class="container mt-5 " style="max-width: 400px;">
     <h2 class="text-center mb-4"> Iniciar Sesión</h2>
 
     {% if error %}
     <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
-
-    <div class="card shadow">
+    <div class="card shadow border-secondary">
         <div class="card-body">
             <form method="POST">
                 <div class="mb-3">
@@ -20,7 +19,8 @@
                 <div class="mb-3">
                     <label>Contraseña</label>
                     <input type="password" name="password" class="form-control" required>
-¡
+
+
 
 
 
