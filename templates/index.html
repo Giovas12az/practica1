@@ -1,16 +1,43 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Inicio{% endblock %}
+{% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
-<h2>Usuarios</h2>
+<div class="container mt-5" style="max-width: 400px;">
+    <h2 class="text-center mb-4"> Iniciar Sesión</h2>
 
-<ul>
-    {% for u in usuarios %}
-        <li>
-            {{ u.nombre }} ({{ u.email }})
-            <a href="{{ url_for('ver_tareas', usuario_id=u._id) }}">Ver tareas</a>
-        </li>
-    {% endfor %}
-</ul>
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" class="form-control" required>
+¡
+
+
+
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    Entrar
+                </button>
+            </form>
+
+            <hr>
+
+            <div class="text-center">
+                <a href="{{ url_for('crear_usuario') }}" class="btn btn-link">
+                    ¿No tienes cuenta? Crear usuario
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

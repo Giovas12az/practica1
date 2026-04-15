@@ -4,7 +4,9 @@ from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict
 import os
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, session
+app = Flask(__name__)
+app.secret_key = "mi_clave_super_secreta"
 class GestorTareas:
     def __init__(self, uri: str = 'mongodb://localhost:27017/'):
         """Inicializar conexión a MongoDB"""
@@ -21,13 +23,13 @@ class GestorTareas:
         except ConnectionFailure:
             print("❌ Error: No se pudo conectar a MongoDB")
             raise
-    
+
     def _crear_indices(self):
         """Crear índices para mejorar rendimiento"""
         self.usuarios.create_index("email", unique=True)
         self.tareas.create_index([("usuario_id", 1), ("fecha_creacion", -1)])
         self.tareas.create_index("estado")
-    
+
     def crear_usuario(self, nombre: str, email: str) -> Optional[str]:
         """Crear un nuevo usuario"""
         try:
@@ -52,9 +54,9 @@ class GestorTareas:
         except Exception as e:
             print(f"Error al obtener usuario: {e}")
             return None
-    
+
     def crear_tarea(self, usuario_id: str, titulo: str, descripcion: str = "", 
-                   fecha_limite: Optional[datetime] = None) -> Optional[str]:
+                fecha_limite: Optional[datetime] = None) -> Optional[str]:
         """Crear una nueva tarea para un usuario"""
         # Verificar que el usuario existe
         if not self.obtener_usuario(usuario_id):
@@ -74,7 +76,7 @@ class GestorTareas:
         
         resultado = self.tareas.insert_one(tarea)
         return str(resultado.inserted_id)
-    
+
     def obtener_tareas_usuario(self, usuario_id: str, estado: Optional[str] = None) -> List[Dict]:
         """Obtener tareas de un usuario, opcionalmente filtradas por estado"""
         filtro = {"usuario_id": ObjectId(usuario_id)}
@@ -88,7 +90,7 @@ class GestorTareas:
             t['usuario_id'] = str(t['usuario_id'])
             resultado.append(t)
         return resultado
-    
+
     def actualizar_estado_tarea(self, tarea_id: str, nuevo_estado: str) -> bool:
         """Actualizar el estado de una tarea"""
         estados_validos = ["pendiente", "en_progreso", "completada", "cancelada"]
@@ -245,6 +247,9 @@ gestor = GestorTareas()
 
 @app.route('/')
 def index():
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+
     usuarios = list(gestor.usuarios.find())
     for u in usuarios:
         u['_id'] = str(u['_id'])
@@ -295,6 +300,28 @@ def eliminar_tarea(tarea_id):
 def ver_tareas(usuario_id):
     tareas = gestor.obtener_tareas_usuario(usuario_id)
     return render_template('tareas.html', tareas=tareas, usuario_id=usuario_id)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        usuario = gestor.usuarios.find_one({"email": email})
+
+        if usuario and usuario['password'] == password:
+            session['usuario_id'] = str(usuario['_id'])
+            session['nombre'] = usuario['nombre']
+            return redirect(url_for('index'))
+        else:
+            return render_template('login.html', error="Credenciales incorrectas")
+
+    return render_template('index.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 if __name__ == "__main__":
     app.run(debug=True)
