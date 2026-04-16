@@ -29,9 +29,11 @@
                     <input type="password" name="confirm_password" class="form-control" required>
                 </div>
                 <br><br>
-                <button type="submit" class="btn btn-primary w-100">
-                    Crear cuenta
-                </button>
+                <form method="POST" action="/crear_tarea">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Crear cuenta
+                    </button>
+                </form>
                 <div class="text-center mt-3">
                     <a href="{{ url_for('index') }}"> Volver</a>
                 </div>

@@ -2,42 +2,64 @@
 
 {% block content %}
 
-<h2> Tareas del usuario</h2>
+<div class="container mt-4">
 
-<a href="{{ url_for('crear_tarea', usuario_id=usuario_id) }}">
-Nueva tarea
-</a>
+    <h2 class="text-center mb-4"> Tareas del usuario</h2>
 
-<hr>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ url_for('crear_tarea', usuario_id=usuario_id) }}" class="btn btn-success">
+            Nueva tarea
+        </a>
+    </div>
 
-<ul>
-    {% for t in tareas %}
-        <li>
-            <strong>{{ t.titulo }}</strong> - {{ t.estado }}
+    <div class="list-group">
 
-            <p>{{ t.descripcion }}</p>
+        {% for t in tareas %}
+        <div class="list-group-item mb-3 shadow-sm rounded p-3">
 
-            <!-- Cambiar estado -->
-            <form method="POST" action="{{ url_for('actualizar_estado', tarea_id=t._id) }}">
-                <select name="estado">
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_progreso">En progreso</option>
-                    <option value="completada">Completada</option>
-                    <option value="cancelada">Cancelada</option>
-                </select>
-                <button type="submit">Actualizar</button>
-            </form>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-1">{{ t.titulo }}</h5>
+                <span class="badge bg-primary">{{ t.estado }}</span>
+            </div>
 
-            <!-- Eliminar -->
-            <form method="POST" action="{{ url_for('eliminar_tarea', tarea_id=t._id) }}">
-                <button type="submit">Eliminar</button>
-            </form>
+            <p class="text-muted mb-2">{{ t.descripcion }}</p>
 
-            <hr>
-        </li>
-    {% endfor %}
-</ul>
+            <div class="d-flex gap-2 flex-wrap">
 
-<a href="{{ url_for('index') }}">⬅ Volver al inicio</a>
+                <form method="POST" action="{{ url_for('actualizar_estado', tarea_id=t._id) }}">
+                    <div class="input-group">
+                        <select name="estado" class="form-select">
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en_progreso">En progreso</option>
+                            <option value="completada">Completada</option>
+                            <option value="cancelada">Cancelada</option>
+                        </select>
+                        <button type="submit" class="btn btn-warning">
+                            Actualizar
+                        </button>
+                    </div>
+                </form>
+
+
+                <form method="POST" action="{{ url_for('eliminar_tarea', tarea_id=t._id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        Eliminar
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            Volver al inicio
+        </a>
+    </div>
+
+</div>
 
 {% endblock %}
