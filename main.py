@@ -348,12 +348,12 @@ def login():
             session['usuario_id'] = str(usuario['_id'])
             session['nombre'] = usuario['nombre']
 
-           
+        
             return redirect(url_for('ver_tareas', usuario_id=session['usuario_id']))
         else:
-            return render_template('index.html', error="Credenciales incorrectas")
+            return render_template('login.html', error="Credenciales incorrectas")
 
-    return render_template('index.html')
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
