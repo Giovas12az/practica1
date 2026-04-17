@@ -348,7 +348,7 @@ def login():
             session['usuario_id'] = str(usuario['_id'])
             session['nombre'] = usuario['nombre']
 
-            # 👇 AQUÍ EL CAMBIO IMPORTANTE
+           
             return redirect(url_for('ver_tareas', usuario_id=session['usuario_id']))
         else:
             return render_template('index.html', error="Credenciales incorrectas")
