@@ -10,33 +10,34 @@
     <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
     <div class="card shadow border-secondary">
-        <div class="card-body">
-            <form method="POST">
-                <div class="mb-3">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label>Contraseña</label>
-                    <input type="password" name="password" class="form-control" required>
+      <div class="card-body">
 
+    <form method="POST" action="{{ url_for('login') }}">
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
 
+        <div class="mb-3">
+            <label>Contraseña</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
 
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+    </form>
 
+    <hr>
 
-                </div>
-                <button type="submit" class="btn btn-primary w-100">
-                    Entrar
-                </button>
-            </form>
+    <div class="text-center">
+        <a href="{{ url_for('crear_usuario') }}" class="btn btn-link">
+            ¿No tienes cuenta? Crear usuario
+        </a>
+    </div>
 
+</div>
             <hr>
 
-            <div class="text-center">
-                <a href="{{ url_for('crear_usuario') }}" class="btn btn-link">
-                    ¿No tienes cuenta? Crear usuario
-                </a>
-            </div>
+            
         </div>
     </div>
 </div>

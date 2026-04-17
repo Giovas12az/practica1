@@ -11,31 +11,29 @@
     {% endif %}
     <div class="card shadow border-secondary">
         <div class="card-body">
-            <form method="POST">
-                <div class="mb-3">
-                    <label>nombre</label>
-                    <input type="text" name="nombre" class="form-control" required>
-                </div>
+            <form method="POST" action="{{ url_for('login') }}">
                 <div class="mb-3">
                     <label>Email</label>
                     <input type="email" name="email" class="form-control" required>
                 </div>
+
                 <div class="mb-3">
                     <label>Contraseña</label>
                     <input type="password" name="password" class="form-control" required>
                 </div>
+
+                
+
                 <div class="mb-3">
                     <label>Confirmar Contraseña</label>
                     <input type="password" name="confirm_password" class="form-control" required>
                 </div>
-                <br><br>
-                <button type="submit" class="btn btn-primary w-100">
-                    Crear cuenta
-                </button>
-                <div class="text-center mt-3">
-                    <a href="{{ url_for('index') }}"> Volver</a>
-                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Crear Usuario</button>
             </form>
+            <a href="{{ url_for('index') }}" class="btn btn-link">
+            Iniciar sesion
+            </a>
         </div>
     </div>
 </div>

@@ -26,12 +26,12 @@
 
       <ul class="navbar-nav me-auto">
 
-        {% if session.get('usuario_id') %}
-
+       
+         {% if not session.get('usuario_id') %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('index') }}">Inicio</a>
           </li>
-
+        {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('ver_tareas', usuario_id=session.get('usuario_id')) }}">
               Mis Tareas

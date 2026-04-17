@@ -242,13 +242,12 @@ def ejemplo_uso():
     gestor.cerrar_conexion()
 
 
-app = Flask(__name__)
 gestor = GestorTareas()
 
 @app.route('/')
 def index():
     if 'usuario_id' not in session:
-        return redirect(url_for('login'))
+        return render_template('index.html')  
 
     usuarios = list(gestor.usuarios.find())
     for u in usuarios:
@@ -259,25 +258,35 @@ def index():
 
 @app.route('/crear_usuario', methods=['GET', 'POST'])
 def crear_usuario():
-
     if request.method == 'POST':
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+        nombre = request.form.get('nombre')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
 
         if password != confirm_password:
             return render_template('crear_usuario.html', error="Las contraseñas no coinciden")
 
-        gestor.crear_usuario(
-            request.form['nombre'],
-            request.form['email'],
-            password
-        )
+        try:
+            resultado = gestor.usuarios.insert_one({
+                "nombre": nombre,
+                "email": email,
+                "password": password,
+                "fecha_registro": datetime.now(),
+                "activo": True
+            })
 
-        return redirect(url_for('index'))
+            usuario_id = str(resultado.inserted_id)
+
+            session['usuario_id'] = usuario_id
+            session['nombre'] = nombre
+
+            return redirect(url_for('ver_tareas', usuario_id=usuario_id))
+
+        except DuplicateKeyError:
+            return render_template('crear_usuario.html', error="Este correo ya está registrado")
 
     return render_template('crear_usuario.html')
-
-
 @app.route('/crear_tarea/<usuario_id>', methods=['GET', 'POST'])
 def crear_tarea(usuario_id):
     if request.method == 'POST':
@@ -313,17 +322,19 @@ def ver_tareas(usuario_id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get('email')
+        password = request.form.get('password')
 
         usuario = gestor.usuarios.find_one({"email": email})
 
         if usuario and usuario['password'] == password:
             session['usuario_id'] = str(usuario['_id'])
             session['nombre'] = usuario['nombre']
-            return redirect(url_for('index'))
+
+            # 👇 AQUÍ EL CAMBIO IMPORTANTE
+            return redirect(url_for('ver_tareas', usuario_id=session['usuario_id']))
         else:
-            return render_template('login.html', error="Credenciales incorrectas")
+            return render_template('index.html', error="Credenciales incorrectas")
 
     return render_template('index.html')
 
@@ -336,3 +347,4 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
