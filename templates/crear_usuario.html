@@ -28,8 +28,20 @@
                     <label>Confirmar Contraseña</label>
                     <input type="password" name="confirm_password" class="form-control" required>
                 </div>
+<<<<<<< HEAD
 
                 <button type="submit" class="btn btn-primary w-100">Crear Usuario</button>
+=======
+                <br><br>
+                <form method="POST" action="/crear_tarea">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Crear cuenta
+                    </button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('index') }}"> Volver</a>
+                </div>
+>>>>>>> fa6a322717220d2d2aef41df3a015548833837e0
             </form>
             <a href="{{ url_for('index') }}" class="btn btn-link">
             Iniciar sesion

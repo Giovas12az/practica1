@@ -12,7 +12,6 @@ class GestorTareas:
         """Inicializar conexión a MongoDB"""
         try:
             self.cliente = MongoClient(uri, serverSelectionTimeoutMS=5000)
-            self.cliente.admin.command('ping')
             self.db = self.cliente['gestor_tareas']
             self.tareas = self.db['tareas']
             self.usuarios = self.db['usuarios']
@@ -53,6 +52,21 @@ class GestorTareas:
             return usuario
         except Exception as e:
             print(f"Error al obtener usuario: {e}")
+            return None
+
+    def crear_usuario(self, nombre: str, email: str, password: str) -> Optional[str]:
+        """Crear un nuevo usuario con contraseña"""
+        try:
+            resultado = self.usuarios.insert_one({
+                "nombre": nombre,
+                "email": email,
+                "password": password,  
+                "fecha_registro": datetime.now(),
+                "activo": True
+            })
+            return str(resultado.inserted_id)
+        except DuplicateKeyError:
+            print(f"❌ Error: El email {email} ya está registrado")
             return None
 
     def crear_tarea(self, usuario_id: str, titulo: str, descripcion: str = "", 
@@ -241,7 +255,10 @@ def ejemplo_uso():
     # Cerrar conexión
     gestor.cerrar_conexion()
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fa6a322717220d2d2aef41df3a015548833837e0
 gestor = GestorTareas()
 
 @app.route('/')
