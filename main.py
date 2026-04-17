@@ -255,10 +255,10 @@ def ejemplo_uso():
     # Cerrar conexión
     gestor.cerrar_conexion()
 
-<<<<<<< HEAD
 
-=======
->>>>>>> fa6a322717220d2d2aef41df3a015548833837e0
+
+
+
 gestor = GestorTareas()
 
 @app.route('/')
