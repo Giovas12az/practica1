@@ -8,7 +8,7 @@
 
     <div class="d-flex justify-content-center mb-3">
         <a href="{{ url_for('crear_tarea', usuario_id=usuario_id) }}" class="btn btn-success">
-             Nueva tarea
+            Nueva tarea
         </a>
     </div>
 
@@ -23,7 +23,7 @@
 
                     <span class="badge 
                         {% if t.estado == 'pendiente' %}bg-warning
-                        {% elif t.estado == 'en_progreso' %}bg-info
+                        {% elif t.estado == 'en progreso' %}bg-info
                         {% elif t.estado == 'completada' %}bg-success
                         {% else %}bg-danger
                         {% endif %}
@@ -58,7 +58,7 @@
 
     <div class="text-center mt-4">
         <a href="{{ url_for('index') }}" class="btn btn-secondary">
-             Volver al inicio
+            Volver al inicio
         </a>
     </div>
 
