@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Flask, flash, render_template, request, redirect, url_for, session
 from datetime import datetime
 from pymongo.errors import DuplicateKeyError
@@ -64,6 +65,36 @@ def crear_tarea(usuario_id):
         return redirect(url_for('ver_tareas', usuario_id=usuario_id))
     
     return render_template('crear_tarea.html', usuario_id=usuario_id)
+
+
+@app.route('/editar_usuario/<usuario_id>', methods=['GET', 'POST'])
+def editar_usuario(usuario_id):
+    try:
+        usuario = gestor.usuarios.find_one({"_id": ObjectId(usuario_id)})
+        if not usuario:
+            flash("Usuario no encontrado", "danger")
+            return redirect(url_for('index'))
+
+        if request.method == 'POST':
+            nombre = request.form.get('nombre')
+            email = request.form.get('email')
+
+            gestor.usuarios.update_one(
+                {"_id": ObjectId(usuario_id)},
+                {"$set": {"nombre": nombre, "email": email}}
+            )
+
+            # Actualizamos el nombre en la sesión
+            session['nombre'] = nombre
+
+            flash("Usuario actualizado correctamente", "success")
+            return redirect(url_for('ver_tareas', usuario_id=usuario_id))
+
+        return render_template('editar_usuario.html', usuario=usuario)
+
+    except Exception as e:
+        # Esto ayuda a ver el error exacto
+        return f"Ha ocurrido un error: {str(e)}"
 
 
 @app.route('/actualizar_estado/<tarea_id>', methods=['POST'])
